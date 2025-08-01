@@ -1,8 +1,8 @@
-#Importing the Python Libraries necessary for the assignment.
-import numpy as np #Used to generate numbers for the population.
-import matplotlib.pyplot as plt #Used for Plot Visualisation
+# Importing the Python Libraries necessary for the assignment.
+import numpy as np # Used to generate numbers for the population.
+import matplotlib.pyplot as plt # Used for Plot Visualisation
 import csv #To log the results in a csv file
-import os #To create the folder to store the images
+import os  #To create the folder to store the images
 os.makedirs("plots", exist_ok=True)
 
 # Define the Rastrigin function
@@ -10,7 +10,7 @@ def rastrigin(X):
     x, y = X
     return 20 + x**2 + y**2 - 10 * (np.cos(2 * np.pi * x) + np.cos(2 * np.pi * y))
     
-#Note: Population Size across each algorithm is 50 and it runs for 100 generations on all of them.
+# Note: Population Size across each algorithm is 50 and it runs for 100 generations on all of them.
 
 # Implementation of the Genetic Algorithm (GA)
 class GeneticAlgorithm:
@@ -231,3 +231,18 @@ with open("results.csv", mode="w", newline="") as file:
     writer.writerow(["Genetic Algorithm", ga_solution[0], ga_solution[1], rastrigin(ga_solution)])
     writer.writerow(["Differential Evolution", de_solution[0], de_solution[1], rastrigin(de_solution)])
     writer.writerow(["Particle Swarm Optimization", pso_solution[0], pso_solution[1], rastrigin(pso_solution)])
+      
+# Saves fitness per generation for all algorithms to a CSV file
+with open("fitness_log.csv", mode="w", newline="") as file:
+    writer = csv.writer(file)
+    
+    # Write header row
+    writer.writerow(["Generation", "GA Fitness", "DE Fitness", "PSO Fitness"])
+    
+    # Iterate over all generations and write fitness values
+    for gen in range(generations):
+        ga_fit = ga.best_fitness_history[gen] if gen < len(ga.best_fitness_history) else ""
+        de_fit = de.best_fitness_history[gen] if gen < len(de.best_fitness_history) else ""
+        pso_fit = pso.best_fitness_history[gen] if gen < len(pso.best_fitness_history) else ""
+        writer.writerow([gen + 1, ga_fit, de_fit, pso_fit])
+    
